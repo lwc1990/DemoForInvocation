@@ -33,14 +33,17 @@
     SEL sel = anInvocation.selector;
     if ([self respondsToSelector:sel])
     {
+        //已实现的直接消息转发
         [anInvocation invoke];
     }
     else if ([[[TestObj alloc]init] respondsToSelector:anInvocation.selector])
     {
+        //未实现的用其他实现的Target转发
         [anInvocation invokeWithTarget:[[TestObj alloc]init]];
     }
     else
     {
+        //都未实现，用预定义的方法方法转发，防止崩溃
         SEL unKnownSel = anInvocation.selector;
         anInvocation.selector = @selector(unKnownSelector:);
         [anInvocation setArgument:unKnownSel atIndex:0];
@@ -60,6 +63,8 @@
         }
         else
         {
+            NSString *str = [NSString stringWithFormat:@"%@ hasn't implementation method %@",NSStringFromClass([self class]),NSStringFromSelector(aSelector)];
+            NSAssert(!DEBUG,str);
             signature = [self methodSignatureForSelector:@selector(unKnownSelector:)];
         }
     }
