@@ -54,6 +54,7 @@
 }
 -(NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
 {
+    //这个方法返回的实例是协同上面的方法实现消息转发的
     NSMethodSignature *signature = [super methodSignatureForSelector:aSelector];
     if (!signature)
     {
